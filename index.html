@@ -3,55 +3,101 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ju, bora pro forró?</title>
+    <title>Ju, bora pro samba?</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body
-    class="flex flex-col items-center justify-center h-screen m-0 bg-pink-100 text-pink-600 font-sans"
-  >
-    <div class="flex items-center gap-5">
-      <div class="space-y-2 font-bold">
-        <h1 class="md:text-5xl text-2xl text-pink-500" id="message">
-          Oi gatinha, <br />
-          Bora pro forró?
-        </h1>
-      </div>
-    </div>
+    <style>
+      /* Estilo para os emojis caindo */
+      .emoji {
+        position: fixed; /* Fixa o emoji dentro da viewport */
+        font-size: 2rem;
+        animation: fall 3s linear infinite;
+        pointer-events: none; /* Ignora eventos de ponteiro */
+      }
 
-    <!-- Botões -->
-    <div class="flex gap-5 mt-5">
-      <button
-        class="px-6 py-3 text-lg font-semibold text-white bg-green-500 rounded-lg animate-yes"
-        onclick="animateYes()"
+      /* Animação de queda */
+      @keyframes fall {
+        0% {
+          transform: translateY(-100vh);
+        }
+        100% {
+          transform: translateY(100vh);
+        }
+      }
+    </style>
+  </head>
+  <body class="h-screen m-0 bg-pink-100 text-pink-600 font-sans">
+    <div
+      class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 grid-rows-3 h-full gap-4 items-center justify-items-center"
+    >
+      <!-- Imagens ao redor - celular: arlindo, clara, ivonne; tablet e acima: seleção ajustada -->
+      <img class="w-full" src="arlindo.png" />
+      <img class="w-full" src="clara.png" />
+      <img class="w-full" src="ivonne.png" />
+
+      <!-- Para tablet: imagens adicionais selecionadas -->
+      <img class="hidden sm:block w-full" src="zeca.png" />
+      <img class="hidden lg:block w-full" src="paulinho.png" />
+      <img class="hidden lg:block w-full" src="fundo.png" />
+
+      <div
+        class="col-span-3 sm:col-span-4 lg:col-span-3 flex flex-col items-center justify-center gap-5"
       >
-        Sim
-      </button>
-      <button
-        class="px-6 py-3 text-lg font-semibold text-white bg-red-500 rounded-lg cursor-pointer btn-no transition-all"
-        onmouseover="flee()"
-        onclick="flee()"
-      >
-        Não
-      </button>
+        <!-- Conteúdo central com título e botões -->
+        <h1
+          class="text-center md:text-5xl text-4xl text-pink-500 font-bold"
+          id="message"
+        >
+          Oi gatinha, <br />
+          Bora pro samba?
+        </h1>
+        <div class="flex gap-5 mt-5">
+          <button
+            class="px-6 py-3 text-lg font-semibold text-white bg-green-500 rounded-lg animate-yes"
+            onclick="animateYes()"
+          >
+            Sim
+          </button>
+          <button
+            class="px-6 py-3 text-lg font-semibold text-white bg-red-500 rounded-lg cursor-pointer btn-no transition-all"
+            onmouseover="flee()"
+            onclick="flee()"
+          >
+            Não
+          </button>
+        </div>
+      </div>
+
+      <!-- Para celular: mosquito, beth e teresa; tablet e acima: seleção ajustada -->
+      <img class="hidden lg:block w-full" src="trabalhador.png" />
+      <img class="w-20 w-full" src="beth.png" />
+      <img class="hidden lg:block w-full" src="nogueira.png" />
+
+      <!-- Para tablet: imagens adicionais selecionadas -->
+      <img class="w-20 w-full" src="mosquito.png" />
+      <img class="hidden sm:block w-full" src="mariene.png" />
+      <img class="w-20 w-full" src="teresa.png" />
     </div>
 
     <script>
       let fleeCount = 0; // Contador de fugas do botão "Não"
       let fleeLimit = 6; // Limite de fugas antes de parar
+      let emojiRainInterval; // Intervalo para a chuva de emojis
 
       function animateYes() {
-        const yesButton = document.querySelector(".animate-yes");
-        yesButton.classList.add(
-          "scale-125",
-          "transition-transform",
-          "duration-500",
-          "ease-in-out"
-        );
-        setTimeout(() => yesButton.classList.remove("scale-125"), 800);
+        // Oculta os botões ao clicar em "Sim"
+        hideButtons();
 
-        // Atualiza o texto dos headers para uma mensagem positiva
-        document.getElementById("message").innerHTML =
-          "<img src='meme_sim.jpg' class='h-96' />";
+        // Exibe a imagem "zeca.png" com a mensagem acima e abaixo
+        document.getElementById("message").innerHTML = `
+      <div class="text-center bg-pink-200 rounded-xl z-50">
+        <h2 class="text-4xl font-bold text-pink-600">Você é um doce!</h2>
+        <img src='zeca-apaixonado.png' class='h-52 mx-auto' alt='Imagem do Zeca' />
+        <p class="text-3xl text-pink-600 mt-2">Nos vemos no samba</p>
+      </div>
+    `;
+
+        // Inicia chuva de emojis felizes
+        startEmojiRain("😍");
       }
 
       function flee() {
@@ -59,8 +105,7 @@
 
         // Verifica se o número de fugas atingiu o limite
         if (fleeCount < fleeLimit) {
-          // Incrementa o contador de fugas
-          fleeCount++;
+          fleeCount++; // Incrementa o contador
 
           // Move o botão "Não" para uma posição aleatória
           const randomX = Math.floor(
@@ -73,12 +118,60 @@
           noButton.style.left = randomX + "px";
           noButton.style.top = randomY + "px";
         } else {
-          // Quando o limite é atingido, permite o clique no botão "Não"
+          // Permite clique no botão "Não" para trocar todas as imagens e exibir emoji de choro
           noButton.onclick = function () {
+            // Oculta os botões após clicar em "Não"
+            hideButtons();
+
+            const images = document.querySelectorAll("img");
+            images.forEach((img) => {
+              img.src = "belo.png"; // Altera a fonte de cada imagem
+            });
+
+            // Troca o conteúdo do título para a imagem "samba_morreu.jpeg"
             document.getElementById("message").innerHTML =
-              "<img src='meme_nao.jpg' class='h-96' />";
+              "<img src='samba_morreu.jpeg' class='h-52' />";
+
+            // Para a chuva de emojis
+            stopEmojiRain();
           };
         }
+      }
+
+      // Função para ocultar os botões
+      function hideButtons() {
+        document.querySelectorAll("button").forEach((button) => {
+          button.style.display = "none";
+        });
+      }
+
+      // Função para iniciar a chuva de emojis de forma constante
+      function startEmojiRain(emoji) {
+        emojiRainInterval = setInterval(() => {
+          createEmojiElement(emoji);
+        }, 200); // Cria um emoji a cada 200ms
+      }
+
+      // Função para parar a chuva de emojis
+      function stopEmojiRain() {
+        clearInterval(emojiRainInterval);
+        const emojis = document.querySelectorAll(".emoji");
+        emojis.forEach((emoji) => emoji.remove());
+      }
+
+      // Função para criar e animar cada emoji
+      function createEmojiElement(emoji) {
+        const emojiElement = document.createElement("div");
+        emojiElement.classList.add("emoji");
+        emojiElement.textContent = emoji;
+        emojiElement.style.left = Math.random() * 100 + "vw"; // Posição aleatória na largura da tela
+        emojiElement.style.animationDuration = Math.random() * 2 + 3 + "s"; // Duração aleatória da animação
+        document.body.appendChild(emojiElement);
+
+        // Remove o emoji do DOM após a animação
+        emojiElement.addEventListener("animationend", () => {
+          emojiElement.remove();
+        });
       }
     </script>
   </body>
